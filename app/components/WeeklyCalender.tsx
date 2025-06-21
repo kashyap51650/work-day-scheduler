@@ -2,15 +2,16 @@
 
 import React, { useState } from "react";
 import clsx from "clsx";
-import TaskHoveredPopup from "./TaskHoveredPopup";
 import { Task } from "@prisma/client";
+import TaskModal from "./TaskModal";
+import { useTaskModal } from "@/hooks/useTaskModal";
 
 interface WeeklyCalendarProps {
   weekDates: string[]; // 7 dates in 'YYYY-MM-DD' format
   tasks: Task[];
 }
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i); // 0 to 23
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 const getCurrentMinutes = () => {
   const now = new Date();
@@ -23,19 +24,18 @@ const isToday = (dateStr: string) => {
 };
 
 export const WeeklyCalendar = ({ weekDates, tasks }: WeeklyCalendarProps) => {
-  const [hoveredTaskId, setHoveredTaskId] = useState<string | null>(null);
-
   const currentMinutes = getCurrentMinutes();
+  const { selectedTask, openModal, closeModal } = useTaskModal();
 
   return (
     <div className="relative overflow-x-auto rounded-lg border border-gray-200 shadow-sm bg-white">
-      <div className="grid grid-cols-[60px_repeat(7,_1fr)] min-w-[900px]">
+      <div className="grid grid-cols-[60px_repeat(7,_1fr)] min-w-[900px] ">
         {/* Header */}
-        <div className="bg-gray-50 h-12 border-b border-r" />
+        <div className="bg-gray-50 h-12 border-b border-r border-gray-300" />
         {weekDates.map((date) => (
           <div
             key={date}
-            className="bg-gray-50 h-12 flex items-center justify-center text-xs font-semibold text-gray-700 border-b border-r"
+            className="bg-gray-50 h-12 flex items-center justify-center text-xs font-semibold text-gray-700 border-b border-r border-gray-300"
           >
             {new Date(date).toLocaleDateString("en-US", {
               weekday: "short",
@@ -48,14 +48,14 @@ export const WeeklyCalendar = ({ weekDates, tasks }: WeeklyCalendarProps) => {
         {/* Time Grid */}
         {HOURS.map((hour, i) => (
           <React.Fragment key={hour}>
-            <div className="border-r border-b h-20 flex items-start justify-end pr-1 text-[11px] text-gray-400 pt-1">
+            <div className="border-r border-b h-20 flex items-start justify-end pr-1 text-[11px] text-gray-400 pt-1 border-gray-300 ">
               {hour.toString().padStart(2, "0")}:00
             </div>
             {weekDates.map((date) => (
               <div
                 key={`${date}-${hour}`}
                 className={clsx(
-                  "relative h-20 border-b border-r",
+                  "relative h-20 border-b border-r border-gray-200",
                   i % 2 === 0 ? "bg-gray-50" : "bg-white"
                 )}
               />
@@ -89,43 +89,43 @@ export const WeeklyCalendar = ({ weekDates, tasks }: WeeklyCalendarProps) => {
                   isToday(task.date) && startTotalMinutes > currentMinutes;
 
                 return (
-                  <>
+                  <div
+                    key={task.id}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openModal(task);
+                    }}
+                    style={{
+                      top: `${topOffset}%`,
+                      height: `${height}%`,
+                    }}
+                    className="absolute left-[4px] right-[4px] cursor-pointer"
+                  >
                     <div
-                      key={task.id}
-                      onMouseEnter={() => setHoveredTaskId(task.id)}
-                      onMouseLeave={() => setHoveredTaskId(null)}
-                      style={{
-                        top: `${topOffset}%`,
-                        height: `${height}%`,
-                      }}
-                      className="absolute left-[4px] right-[4px]"
+                      className={clsx(
+                        "w-full h-full p-[6px] text-[11px] rounded-md shadow-md pointer-events-auto",
+                        "bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 border-l-4 border-indigo-500",
+                        upcoming
+                          ? "text-white font-semibold"
+                          : "text-gray-100 opacity-80"
+                      )}
                     >
-                      <div
-                        className={clsx(
-                          "w-full h-full p-[6px] text-[11px] rounded-md shadow-md pointer-events-auto relative",
-                          "bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 border-l-4 border-indigo-500",
-                          upcoming
-                            ? "text-white font-semibold"
-                            : "text-gray-100 opacity-80"
-                        )}
-                      >
-                        <strong className="block text-[12px] truncate">
-                          {task.title}
-                        </strong>
-                        <span className="text-[10px] block">
-                          {task.startTime} – {task.endTime}
-                        </span>
-                      </div>
+                      <strong className="block text-[12px] truncate">
+                        {task.title}
+                      </strong>
+                      <span className="text-[10px] block">
+                        {task.startTime} – {task.endTime}
+                      </span>
                     </div>
-                    {hoveredTaskId === task.id && (
-                      <TaskHoveredPopup task={task} />
-                    )}
-                  </>
+                  </div>
                 );
               })}
           </div>
         ))}
       </div>
+
+      {/* Modal */}
+      {selectedTask && <TaskModal task={selectedTask} onClose={closeModal} />}
     </div>
   );
 };
