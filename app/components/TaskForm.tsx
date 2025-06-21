@@ -1,6 +1,6 @@
 "use client";
 
-import { createTask } from "../actions/task";
+import { createTask } from "../../actions/task";
 import {
   CalendarIcon,
   ClockIcon,
@@ -10,7 +10,7 @@ import { useActionState } from "react";
 
 const initialState = { message: "" };
 
-export function TaskForm() {
+export default function TaskForm() {
   const [state, formAction] = useActionState(createTask, initialState);
 
   return (

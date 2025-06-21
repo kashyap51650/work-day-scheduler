@@ -1,4 +1,4 @@
-import { Task } from "../generated/prisma";
+import { Task } from "@prisma/client";
 
 export async function saveTask(task: {
   title: string;

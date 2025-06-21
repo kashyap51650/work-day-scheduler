@@ -1,6 +1,6 @@
 "use client";
 
-import { useWeeklyCalendar } from "../hooks/useWeeklyCalender";
+import { useWeeklyCalendar } from "../../hooks/useWeeklyCalender";
 import { WeeklyCalendar } from "./WeeklyCalender";
 
 export default function CalendarPage() {
@@ -23,7 +23,7 @@ export default function CalendarPage() {
   })}`;
 
   return (
-    <main className="max-w-6xl mx-auto p-6 space-y-4">
+    <main className="p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-xl font-bold">Workday Calendar</h1>
         <div className="flex items-center gap-2">

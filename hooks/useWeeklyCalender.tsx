@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { getWeekDates } from "../utils/date";
-import { fetchTasks } from "../services/taskService";
-import { Task } from "../generated/prisma";
+import { fetchTasks } from "@/app/services/taskService";
+import { Task } from "@prisma/client";
 
 export function useWeeklyCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());

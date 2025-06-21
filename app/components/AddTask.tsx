@@ -1,5 +1,5 @@
 import React from "react";
-import { TaskForm } from "./TaskForm";
+import TaskForm from "./TaskForm";
 
 const AddTask = () => {
   return (
