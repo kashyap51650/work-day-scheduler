@@ -11,8 +11,11 @@ import { useActionState } from "react";
 const initialState = { message: "" };
 
 export default function TaskForm() {
-  const [state, formAction] = useActionState(createTask, initialState);
-
+  const [state, formAction, isPending] = useActionState(
+    createTask,
+    initialState
+  );
+  console.log(isPending, "isPending");
   return (
     <form
       action={formAction}
@@ -92,7 +95,8 @@ export default function TaskForm() {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition"
+        className="w-full cursor-pointer bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isPending}
       >
         Add Task
       </button>

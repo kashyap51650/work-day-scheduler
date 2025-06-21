@@ -9,6 +9,9 @@ export async function createTask(
   prevState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  // Add 5 seconds delay to simulate server processing time
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
+  console.log("Form Data:", Object.fromEntries(formData.entries()));
   const task = await db.task.create({
     data: {
       title: formData.get("title") as string,
@@ -17,6 +20,5 @@ export async function createTask(
       endTime: formData.get("endTime") as string,
     },
   });
-  console.log(task);
   return { message: "✅ Task added successfully!" };
 }
