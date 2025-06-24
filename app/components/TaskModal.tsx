@@ -7,6 +7,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { useModal } from "@/hooks/useModal";
 import TaskFormModal from "./TaskFormModal";
+import { deleteTask } from "@/actions/task";
+import { useWeeklyCalendarStore } from "@/store/useWeeklyCalenderStore";
 
 interface TaskModalProps {
   task: Task;
@@ -15,16 +17,19 @@ interface TaskModalProps {
 
 const TaskModal: React.FC<TaskModalProps> = ({ task, onClose }) => {
   const { isOpen, openModal, closeModal } = useModal();
+  const { loadTasks } = useWeeklyCalendarStore();
 
   const handleEdit = () => {
     openModal();
   };
 
-  const handleDelete = () => {
-    const confirmDelete = confirm("Are you sure you want to delete this task?");
-    if (confirmDelete) {
-      // delete logic here
-      alert(`Deleted: ${task.title}`);
+  const handleDelete = async () => {
+    try {
+      await deleteTask(task.id);
+      loadTasks();
+      onClose();
+    } catch (error) {
+      console.log(error);
     }
   };
 

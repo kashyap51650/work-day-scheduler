@@ -41,9 +41,9 @@ export async function updateTask(formData: FormData): Promise<FormState> {
   return { message: "✅ Task updated successfully!", success: true };
 }
 
-export async function deleteTask(formData: FormData): Promise<FormState> {
+export async function deleteTask(taskId: string): Promise<FormState> {
   const task = await db.task.delete({
-    where: { id: formData.get("id") as string },
+    where: { id: taskId },
   });
   revalidateTag("tasks");
   return { message: "✅ Task deleted successfully!", success: true };
