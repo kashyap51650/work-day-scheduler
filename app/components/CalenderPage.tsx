@@ -1,18 +1,28 @@
 "use client";
 
-import { useWeeklyCalendar } from "../../hooks/useWeeklyCalender";
+import { useWeeklyCalendarStore } from "@/store/useWeeklyCalenderStore";
 import { WeeklyCalendar } from "./WeeklyCalender";
+import { useEffect } from "react";
 
-export default function CalendarPage() {
+export const CalendarPage: React.FC<{
+  showTaskForm: boolean;
+  toggleTaskForm: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ showTaskForm, toggleTaskForm }) => {
   const {
     weekDates,
     tasks,
+    currentDate,
     goToNextWeek,
     goToPrevWeek,
     goToToday,
     goToDate,
-    currentDate,
-  } = useWeeklyCalendar();
+    loadTasks,
+  } = useWeeklyCalendarStore();
+
+  // Load tasks whenever the currentDate changes
+  useEffect(() => {
+    loadTasks();
+  }, [currentDate]);
 
   const displayRange = `${new Date(weekDates[0]).toLocaleDateString("en-US", {
     month: "short",
@@ -45,10 +55,16 @@ export default function CalendarPage() {
             className="text-sm border rounded px-2 py-1"
             defaultValue={currentDate.toISOString().split("T")[0]}
           />
+          <button
+            className="primary-btn"
+            onClick={() => toggleTaskForm((prev) => !prev)}
+          >
+            {!showTaskForm ? "Add Task" : "Show Full Screen"}
+          </button>
         </div>
       </div>
 
       <WeeklyCalendar weekDates={weekDates} tasks={tasks} />
     </main>
   );
-}
+};
