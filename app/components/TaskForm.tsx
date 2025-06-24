@@ -1,25 +1,45 @@
 "use client";
 
+import { useWeeklyCalendarStore } from "@/store/useWeeklyCalenderStore";
 import { createTask } from "../../actions/task";
 import {
   CalendarIcon,
+  CheckCircleIcon,
   ClockIcon,
   PencilIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useActionState } from "react";
 
-const initialState = { message: "" };
+import { useActionState, useEffect, useRef, useState } from "react";
+
+const initialState = { message: "", success: false };
 
 export default function TaskForm() {
+  const { loadTasks } = useWeeklyCalendarStore();
   const [state, formAction] = useActionState(createTask, initialState);
 
+  const [showStatus, setShowStatus] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (state.message) {
+      setShowStatus(true);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setShowStatus(false), 2000);
+    }
+    if (state.success) loadTasks();
+    // eslint-disable-next-line
+  }, [state.message, state.success]);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
   return (
-    <form
-      action={formAction}
-      className="bg-white shadow-xl rounded-2xl p-6 max-w-md w-full border border-gray-200 space-y-5"
-    >
+    <form action={formAction} className="p-6 space-y-5">
       <div className="text-indigo-600 text-xl font-semibold flex items-center gap-2">
-        <PencilIcon className="w-5 h-5" />
         Add Task
       </div>
 
@@ -90,18 +110,27 @@ export default function TaskForm() {
       </div>
 
       {/* Submit Button */}
-      <button
-        type="submit"
-        className="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition"
-      >
+      <button type="submit" className="w-full primary-btn">
         Add Task
       </button>
 
       {/* Status Message */}
-      {state?.message && (
-        <p className="text-green-600 text-sm mt-2 text-center">
-          {state.message}
-        </p>
+      {showStatus && state.message && (
+        <div
+          className={`flex items-center justify-center gap-2 mt-3 py-2 px-3 rounded-lg border text-sm font-medium animate-fade-in
+            ${
+              state.success
+                ? "bg-green-50 border-green-200 text-green-700"
+                : "bg-red-50 border-red-200 text-red-700"
+            }`}
+        >
+          {state.success ? (
+            <CheckCircleIcon className="w-5 h-5 text-green-500" />
+          ) : (
+            <XCircleIcon className="w-5 h-5 text-red-500" />
+          )}
+          <span>{state.message}</span>
+        </div>
       )}
     </form>
   );
