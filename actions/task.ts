@@ -1,16 +1,10 @@
 "use server";
-
 import { db } from "@/lib/prisma";
-import { saveTask } from "../app/services/taskService";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-type FormState = { message: string };
+type FormState = { message: string; success?: boolean };
 
-export async function createTask(
-  prevState: FormState,
-  formData: FormData
-): Promise<FormState> {
-  // Add 5 seconds delay to simulate server processing time
-  // await new Promise((resolve) => setTimeout(resolve, 5000));
+export async function createTask(formData: FormData): Promise<FormState> {
   console.log("Form Data:", Object.fromEntries(formData.entries()));
   const task = await db.task.create({
     data: {
@@ -20,5 +14,30 @@ export async function createTask(
       endTime: formData.get("endTime") as string,
     },
   });
-  return { message: "✅ Task added successfully!" };
+  revalidateTag("tasks");
+  return { message: "✅ Task added successfully!", success: true };
+}
+
+export async function updateTask(formData: FormData): Promise<FormState> {
+  console.log("Form Data:", Object.fromEntries(formData.entries()));
+  const task = await db.task.update({
+    where: { id: formData.get("id") as string },
+    data: {
+      title: formData.get("title") as string,
+      date: formData.get("date") as string,
+      startTime: formData.get("startTime") as string,
+      endTime: formData.get("endTime") as string,
+    },
+  });
+  revalidateTag("tasks");
+  revalidatePath("/");
+  return { message: "✅ Task updated successfully!", success: true };
+}
+
+export async function deleteTask(formData: FormData): Promise<FormState> {
+  const task = await db.task.delete({
+    where: { id: formData.get("id") as string },
+  });
+  revalidateTag("tasks");
+  return { message: "✅ Task deleted successfully!", success: true };
 }

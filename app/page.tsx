@@ -15,7 +15,7 @@ export default function Home() {
         </aside> */}
 
         {/* Calendar Section - Scrollable */}
-        <section className="w-full h-100vh overflow-auto bg-white rounded-2xl shadow-md">
+        <section className="w-full h-100vh bg-white rounded-2xl shadow-md overflow-hidden">
           <CalendarPage />
         </section>
       </div>

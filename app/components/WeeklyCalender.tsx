@@ -5,6 +5,8 @@ import clsx from "clsx";
 import { Task } from "@prisma/client";
 import TaskModal from "./TaskModal";
 import { useTaskModal } from "@/hooks/useTaskModal";
+import { getCurrentMinutes } from "@/utils/time";
+import { getDateValues, isToday } from "@/utils/date";
 
 interface WeeklyCalendarProps {
   weekDates: string[]; // 7 dates in 'YYYY-MM-DD' format
@@ -12,16 +14,6 @@ interface WeeklyCalendarProps {
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
-
-const getCurrentMinutes = () => {
-  const now = new Date();
-  return now.getHours() * 60 + now.getMinutes();
-};
-
-const isToday = (dateStr: string) => {
-  const today = new Date().toISOString().split("T")[0];
-  return today === dateStr;
-};
 
 export const WeeklyCalendar = ({ weekDates, tasks }: WeeklyCalendarProps) => {
   const currentMinutes = getCurrentMinutes();
@@ -35,13 +27,13 @@ export const WeeklyCalendar = ({ weekDates, tasks }: WeeklyCalendarProps) => {
         {weekDates.map((date) => (
           <div
             key={date}
-            className="bg-gray-50 h-12 flex items-center justify-center text-xs font-semibold text-gray-700 border-b border-r border-gray-300"
+            className={clsx(
+              "bg-gray-50 h-12 flex items-center justify-center text-xs font-semibold text-gray-700 border-b border-r border-gray-300 flex-col",
+              isToday(date) && "border-b-indigo-500 border-b-4"
+            )}
           >
-            {new Date(date).toLocaleDateString("en-US", {
-              weekday: "short",
-              month: "short",
-              day: "numeric",
-            })}
+            <div className="text-xl">{getDateValues(date).day}</div>
+            <div>{getDateValues(date).weekday}</div>
           </div>
         ))}
 
