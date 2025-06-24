@@ -22,7 +22,7 @@ export const CalendarPage: React.FC<{
   // Load tasks whenever the currentDate changes
   useEffect(() => {
     loadTasks();
-  }, [currentDate]);
+  }, [currentDate, loadTasks]);
 
   const displayRange = `${new Date(weekDates[0]).toLocaleDateString("en-US", {
     month: "short",

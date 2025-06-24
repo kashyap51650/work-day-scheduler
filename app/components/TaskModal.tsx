@@ -5,7 +5,6 @@ import {
   TrashIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useTaskModal } from "@/hooks/useTaskModal";
 import { useModal } from "@/hooks/useModal";
 import TaskFormModal from "./TaskFormModal";
 

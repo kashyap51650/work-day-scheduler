@@ -10,10 +10,12 @@ const TaskDetailsPopup: React.FC<{
 }> = ({ task, x, y }) => {
   const handleEdit = (task: Task) => {
     // open modal or navigate
+    console.log(task);
   };
 
   const handleDelete = (taskId: string) => {
     // confirmation and delete
+    console.log(taskId);
   };
 
   return (
