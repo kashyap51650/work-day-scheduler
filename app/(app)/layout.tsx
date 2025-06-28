@@ -6,7 +6,7 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <main>
+    <main className="flex flex-col h-screen overflow-hidden">
       <CalendarToolbar />
       {children}
     </main>
