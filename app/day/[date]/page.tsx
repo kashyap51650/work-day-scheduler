@@ -1,8 +1,8 @@
-import { CalendarGrid } from "@/app/components/Calendar/CalendarGrid";
-import { CalendarHeader } from "@/app/components/Calendar/CalendarHeader";
-import { TaskLayer } from "@/app/components/Calendar/TaskLayer";
-import { TimeColumn } from "@/app/components/Calendar/TimeColumn";
-import { fetchTasks } from "@/app/services/taskService";
+import { CalendarGrid } from "@/components/Calendar/CalendarGrid";
+import { CalendarHeader } from "@/components/Calendar/CalendarHeader";
+import { TaskLayer } from "@/components/Calendar/TaskLayer";
+import { TimeColumn } from "@/components/Calendar/TimeColumn";
+import { fetchTasks } from "@/services/taskService";
 import React from "react";
 
 const DayPage = async ({ params }: { params: { date: string } }) => {
@@ -16,7 +16,7 @@ const DayPage = async ({ params }: { params: { date: string } }) => {
         {/* Time labels and grid */}
         <TimeColumn />
         <div className="relative">
-          <CalendarGrid date={date} />
+          <CalendarGrid />
           <TaskLayer date={date} tasks={data} />
         </div>
       </div>

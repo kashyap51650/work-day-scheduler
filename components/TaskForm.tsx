@@ -1,7 +1,7 @@
 "use client";
 
+import { createTask } from "@/actions/task";
 import { useWeeklyCalendarStore } from "@/store/useWeeklyCalenderStore";
-import { createTask } from "../../actions/task";
 import {
   CalendarIcon,
   CheckCircleIcon,

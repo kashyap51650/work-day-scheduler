@@ -1,9 +1,10 @@
-import { CalendarGrid } from "@/app/components/Calendar/CalendarGrid";
-import { CalendarHeader } from "@/app/components/Calendar/CalendarHeader";
-import { TaskLayer } from "@/app/components/Calendar/TaskLayer";
-import { TimeColumn } from "@/app/components/Calendar/TimeColumn";
-import { fetchTasks } from "@/app/services/taskService";
+import { CalendarGrid } from "@/components/Calendar/CalendarGrid";
+import { CalendarHeader } from "@/components/Calendar/CalendarHeader";
+import { TaskLayer } from "@/components/Calendar/TaskLayer";
+import { TimeColumn } from "@/components/Calendar/TimeColumn";
+import { fetchTasks } from "@/services/taskService";
 import React from "react";
+
 const WeekPage = async ({ params }: { params: { weekStart: string } }) => {
   const { weekStart } = await params;
   const data = await fetchTasks({ weekStart });

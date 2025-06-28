@@ -1,8 +1,8 @@
 "use client";
 
+import AddTask from "@/components/AddTask";
+import { CalendarPage } from "@/components/CalenderPage";
 import { useState } from "react";
-import AddTask from "../components/AddTask";
-import { CalendarPage } from "../components/CalenderPage";
 
 export default function Today() {
   const [showTaskForm, setShowTaskForm] = useState(false);
