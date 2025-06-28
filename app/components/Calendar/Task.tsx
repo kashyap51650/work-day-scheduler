@@ -1,4 +1,3 @@
-// components/Calendar/TaskCard.tsx
 "use client";
 import { Task } from "@prisma/client";
 import clsx from "clsx";
@@ -64,8 +63,10 @@ export const TaskCard = ({
         <div
           className={clsx(
             "w-full h-full p-[6px] text-[11px] rounded-md shadow-sm relative",
-            "bg-indigo-200 border-l-4 border-indigo-700",
-            upcoming ? "font-semibold" : "text-black-100 opacity-80"
+            "bg-indigo-200 border-l-4 ",
+            upcoming
+              ? "font-semibold bg-indigo-300 border-indigo-700"
+              : "text-black-100 border-indigo-500 opacity-80 "
           )}
         >
           {/* Hover icons */}
