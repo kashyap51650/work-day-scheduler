@@ -1,7 +1,6 @@
 "use client";
 
 import { createTask } from "@/actions/task";
-import { useWeeklyCalendarStore } from "@/store/useWeeklyCalenderStore";
 import {
   CalendarIcon,
   CheckCircleIcon,
@@ -15,7 +14,6 @@ import { useActionState, useEffect, useRef, useState } from "react";
 const initialState = { message: "", success: false };
 
 export default function TaskForm() {
-  const { loadTasks } = useWeeklyCalendarStore();
   const [state, formAction] = useActionState(createTask, initialState);
 
   const [showStatus, setShowStatus] = useState(false);
@@ -27,8 +25,6 @@ export default function TaskForm() {
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setShowStatus(false), 2000);
     }
-    if (state.success) loadTasks();
-    // eslint-disable-next-line
   }, [state.message, state.success]);
 
   useEffect(() => {
