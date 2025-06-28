@@ -1,8 +1,11 @@
 "use client";
 import { Task } from "@prisma/client";
 import { TaskCard } from "./Task";
+import { getWeekDates } from "@/utils/date";
+
 interface TaskLayerProps {
-  date: string;
+  date?: string; // for single day
+  weekDate?: string; // for week view
   tasks: Task[];
   onTaskClick?: (task: Task) => void;
 }
@@ -12,12 +15,8 @@ const isOverlapping = (a: Task, b: Task) => {
   return a.startTime < b.endTime && b.startTime < a.endTime;
 };
 
-export const TaskLayer = ({ date, tasks, onTaskClick }: TaskLayerProps) => {
-  const dayTasks = tasks.filter((task) => task.date === date);
-
-  // Build overlap groups
+function getGroups(dayTasks: Task[]) {
   const groups: Task[][] = [];
-
   dayTasks.forEach((task) => {
     let added = false;
     for (const group of groups) {
@@ -31,6 +30,68 @@ export const TaskLayer = ({ date, tasks, onTaskClick }: TaskLayerProps) => {
       groups.push([task]);
     }
   });
+  return groups;
+}
+
+export const TaskLayer = ({
+  date,
+  weekDate,
+  tasks,
+  onTaskClick,
+}: TaskLayerProps) => {
+  // Week view
+  if (weekDate) {
+    const weekDates = getWeekDates(new Date(weekDate));
+    return (
+      <div className="absolute top-0 left-0 right-0 bottom-0 grid grid-cols-7 pointer-events-none min-w-[840px]">
+        {weekDates.map((d) => {
+          const dayTasks = tasks.filter((task) => task.date === d);
+          const groups = getGroups(dayTasks);
+
+          return (
+            <div key={d} className="relative">
+              {groups.flatMap((group, groupIndex) =>
+                group.map((task, i) => {
+                  const [startHour, startMinute] = task.startTime
+                    .split(":")
+                    .map(Number);
+                  const [endHour, endMinute] = task.endTime
+                    .split(":")
+                    .map(Number);
+
+                  const startTotalMinutes = startHour * 60 + startMinute;
+                  const endTotalMinutes = endHour * 60 + endMinute;
+                  const durationMinutes = endTotalMinutes - startTotalMinutes;
+
+                  const topOffset = (startTotalMinutes / (24 * 60)) * 100;
+                  const height = (durationMinutes / (24 * 60)) * 100;
+
+                  const widthPercent = 100 / group.length;
+                  const leftOffset = widthPercent * i;
+
+                  return (
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      topOffset={topOffset}
+                      height={height}
+                      width={widthPercent}
+                      left={leftOffset}
+                      onClick={onTaskClick}
+                    />
+                  );
+                })
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Single day view (default)
+  const dayTasks = tasks.filter((task) => task.date === date);
+  const groups = getGroups(dayTasks);
 
   return (
     <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
