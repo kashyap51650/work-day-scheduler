@@ -21,7 +21,7 @@ export default function HomePage() {
             management and smart UI powered by <strong>React 19</strong>.
           </p>
           <Link
-            href="/today"
+            href={"/day/" + new Date().toISOString().split("T")[0]}
             className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-xl text-lg font-medium hover:bg-indigo-700 transition"
           >
             🚀 Get Started
@@ -62,7 +62,7 @@ export default function HomePage() {
             Get started now and take control of your time.
           </p>
           <Link
-            href="/today"
+            href={"/day/" + new Date().toISOString().split("T")[0]}
             className="bg-indigo-600 text-white px-6 py-3 rounded-xl text-lg font-medium hover:bg-indigo-700 transition"
           >
             Plan My Day
