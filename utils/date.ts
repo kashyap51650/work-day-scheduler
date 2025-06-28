@@ -1,12 +1,14 @@
-export function getWeekDates(startDate: Date): string[] {
-  const startOfWeek = new Date(startDate);
-  const day = startOfWeek.getDay();
-  const diff = startOfWeek.getDate() - day + 1; // Monday
-  startOfWeek.setDate(diff);
+export function getWeekDates(date: Date): string[] {
+  const givenDate = new Date(date);
+  const day = givenDate.getDay(); // 0 (Sun) to 6 (Sat)
+  const mondayOffset = day === 0 ? -6 : 1 - day; // move to Monday
+
+  const monday = new Date(givenDate);
+  monday.setDate(givenDate.getDate() + mondayOffset);
 
   return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(startOfWeek);
-    d.setDate(startOfWeek.getDate() + i);
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
     return d.toISOString().split("T")[0];
   });
 }
