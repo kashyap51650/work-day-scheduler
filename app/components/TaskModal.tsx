@@ -6,9 +6,9 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useModal } from "@/hooks/useModal";
-import TaskFormModal from "./TaskFormModal";
 import { deleteTask } from "@/actions/task";
 import { useWeeklyCalendarStore } from "@/store/useWeeklyCalenderStore";
+import { EditTaskModal } from "./EditTaskModal";
 
 interface TaskModalProps {
   task: Task;
@@ -72,7 +72,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, onClose }) => {
           </div>
         </div>
       </div>
-      <TaskFormModal isOpen={isOpen} onClose={closeModal} initialData={task} />
+      <EditTaskModal isOpen={isOpen} onClose={closeModal} initialData={task} />
     </>
   );
 };

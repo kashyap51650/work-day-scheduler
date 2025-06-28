@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   CalendarIcon,
   ClockIcon,
@@ -8,13 +9,13 @@ import {
 import { Task } from "@prisma/client";
 import { updateTask } from "@/actions/task";
 
-interface TaskFormModalProps {
+interface EditTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialData?: Partial<Task>;
 }
 
-const TaskFormModal: React.FC<TaskFormModalProps> = ({
+export const EditTaskModal: React.FC<EditTaskModalProps> = ({
   isOpen,
   onClose,
   initialData,
@@ -44,9 +45,9 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
     onClose();
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof window === "undefined") return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md relative">
         <button
@@ -141,8 +142,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
           </button>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
-
-export default TaskFormModal;
