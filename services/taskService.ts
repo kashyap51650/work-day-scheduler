@@ -16,7 +16,7 @@ export async function fetchTasks(
       ][]
     )
   ).toString();
-  const url = `http://localhost:3000/api/tasks${query ? `?${query}` : ""}`;
+  const url = `${process.env.BASE_URL}/tasks${query ? `?${query}` : ""}`;
 
   const res = await fetch(url, {
     next: { tags: ["tasks"] }, // ✅ ISR/Cache tagging
