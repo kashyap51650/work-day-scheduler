@@ -1,5 +1,4 @@
-// components/Calendar/TimeColumn.tsx
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
+import { HOURS } from "@/constant/time";
 
 export const TimeColumn = () => {
   return (
