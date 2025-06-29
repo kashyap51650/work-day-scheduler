@@ -4,7 +4,7 @@ import { CurrentTimeBar } from "@/components/Calendar/CurrentTimeBar";
 import { TaskLayer } from "@/components/Calendar/TaskLayer";
 import { TimeColumn } from "@/components/Calendar/TimeColumn";
 import { fetchTasks } from "@/services/taskService";
-import React from "react";
+import React, { Suspense } from "react";
 
 const DayPage = async ({ params }: { params: { date: string } }) => {
   const { date } = await params;
@@ -20,7 +20,15 @@ const DayPage = async ({ params }: { params: { date: string } }) => {
           <TimeColumn />
           <div className="relative">
             <CalendarGrid />
-            <TaskLayer date={date} tasksPromise={data} />
+            <Suspense
+              fallback={
+                <div className="absolute inset-0 flex items-center justify-center">
+                  Loading tasks...
+                </div>
+              }
+            >
+              <TaskLayer date={date} tasksPromise={data} />
+            </Suspense>
             <CurrentTimeBar week={false} />
           </div>
         </div>
