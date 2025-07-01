@@ -2,11 +2,12 @@
 import { Task } from "@prisma/client";
 import { TaskCard } from "./Task";
 import { getWeekDates } from "@/utils/date";
+import { use } from "react";
 
 interface TaskLayerProps {
   date?: string; // for single day
   weekDate?: string; // for week view
-  tasks: Task[];
+  tasksPromise: Promise<Task[]>; // tasks can be a promise or an array
   onTaskClick?: (task: Task) => void;
 }
 
@@ -36,9 +37,10 @@ function getGroups(dayTasks: Task[]) {
 export const TaskLayer = ({
   date,
   weekDate,
-  tasks,
+  tasksPromise,
   onTaskClick,
 }: TaskLayerProps) => {
+  const tasks = use(tasksPromise);
   // Week view
   if (weekDate) {
     const weekDates = getWeekDates(new Date(weekDate));
@@ -50,7 +52,7 @@ export const TaskLayer = ({
 
           return (
             <div key={d} className="relative">
-              {groups.flatMap((group, groupIndex) =>
+              {groups.flatMap((group) =>
                 group.map((task, i) => {
                   const [startHour, startMinute] = task.startTime
                     .split(":")
@@ -95,7 +97,7 @@ export const TaskLayer = ({
 
   return (
     <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
-      {groups.flatMap((group, groupIndex) =>
+      {groups.flatMap((group) =>
         group.map((task, i) => {
           const [startHour, startMinute] = task.startTime
             .split(":")

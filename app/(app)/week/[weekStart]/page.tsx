@@ -1,13 +1,19 @@
 import { CalendarGrid } from "@/components/Calendar/CalendarGrid";
 import { CalendarHeader } from "@/components/Calendar/CalendarHeader";
+import { CurrentTimeBar } from "@/components/Calendar/CurrentTimeBar";
 import { TaskLayer } from "@/components/Calendar/TaskLayer";
 import { TimeColumn } from "@/components/Calendar/TimeColumn";
 import { fetchTasks } from "@/services/taskService";
-import React from "react";
+import React, { Suspense } from "react";
 
-const WeekPage = async ({ params }: { params: { weekStart: string } }) => {
+const WeekPage = async ({
+  params,
+}: {
+  params: Promise<{ weekStart: string }>;
+}) => {
   const { weekStart } = await params;
-  const data = await fetchTasks({ weekStart });
+  // But using await in a Server Component will block its rendering until the await statement is finished. Passing a Promise from a Server Component to a Client Component prevents the Promise from blocking the rendering of the Server Component.
+  const data = fetchTasks({ weekStart });
   return (
     <div className="p-6">
       <div className=" border border-gray-300 shadow-sm rounded-xl">
@@ -19,7 +25,16 @@ const WeekPage = async ({ params }: { params: { weekStart: string } }) => {
           <TimeColumn />
           <div className="relative">
             <CalendarGrid week={true} />
-            <TaskLayer weekDate={weekStart} tasks={data} />
+            <Suspense
+              fallback={
+                <div className="absolute inset-0 flex items-center justify-center">
+                  Loading tasks...
+                </div>
+              }
+            >
+              <TaskLayer weekDate={weekStart} tasksPromise={data} />
+            </Suspense>
+            <CurrentTimeBar week={true} />
           </div>
         </div>
       </div>

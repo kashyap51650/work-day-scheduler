@@ -1,7 +1,7 @@
 // app/api/tasks/route.ts
 import { db } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { addDays, format, getWeek, parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 import { getWeekDates } from "@/utils/date";
 
 export async function GET(req: Request) {
@@ -25,7 +25,7 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json(tasks);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
