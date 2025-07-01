@@ -52,7 +52,7 @@ export const TaskLayer = ({
 
           return (
             <div key={d} className="relative">
-              {groups.flatMap((group, groupIndex) =>
+              {groups.flatMap((group) =>
                 group.map((task, i) => {
                   const [startHour, startMinute] = task.startTime
                     .split(":")
@@ -97,7 +97,7 @@ export const TaskLayer = ({
 
   return (
     <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
-      {groups.flatMap((group, groupIndex) =>
+      {groups.flatMap((group) =>
         group.map((task, i) => {
           const [startHour, startMinute] = task.startTime
             .split(":")

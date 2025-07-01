@@ -35,7 +35,7 @@ export const DeleteConfirmModal = ({
         <p className="text-gray-700 mb-4">
           Are you sure you want to delete
           {taskTitle ? (
-            <span className="font-semibold text-red-600"> "{taskTitle}"</span>
+            <span className="font-semibold text-red-600">{taskTitle}</span>
           ) : (
             " this task"
           )}
