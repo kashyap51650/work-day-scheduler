@@ -10,7 +10,7 @@ export async function createTask(
   formData: FormData
 ): Promise<FormState> {
   try {
-    const task = await db.task.create({
+    await db.task.create({
       data: {
         title: formData.get("title") as string,
         date: formData.get("date") as string,
@@ -26,8 +26,7 @@ export async function createTask(
 }
 
 export async function updateTask(formData: FormData): Promise<FormState> {
-  console.log("Form Data:", Object.fromEntries(formData.entries()));
-  const task = await db.task.update({
+  await db.task.update({
     where: { id: formData.get("id") as string },
     data: {
       title: formData.get("title") as string,
@@ -37,12 +36,11 @@ export async function updateTask(formData: FormData): Promise<FormState> {
     },
   });
   revalidateTag("tasks");
-  revalidatePath("/");
   return { message: "✅ Task updated successfully!", success: true };
 }
 
 export async function deleteTask(taskId: string): Promise<FormState> {
-  const task = await db.task.delete({
+  await db.task.delete({
     where: { id: taskId },
   });
   revalidateTag("tasks");

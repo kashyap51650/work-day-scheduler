@@ -1,7 +1,7 @@
 // stores/useWeeklyCalendarStore.ts
 import { create } from "zustand";
 import { getWeekDates } from "@/utils/date";
-import { fetchTasks } from "@/app/services/taskService";
+import { fetchTasks } from "@/services/taskService";
 import { Task } from "@prisma/client";
 
 interface WeeklyCalendarState {
