@@ -6,7 +6,7 @@ import { TimeColumn } from "@/components/Calendar/TimeColumn";
 import { fetchTasks } from "@/services/taskService";
 import React, { Suspense } from "react";
 
-const DayPage = async ({ params }: { params: { date: string } }) => {
+const DayPage = async ({ params }: { params: Promise<{ date: string }> }) => {
   const { date } = await params;
   const data = fetchTasks({ date });
   return (
