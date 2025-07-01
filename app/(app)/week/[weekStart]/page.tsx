@@ -6,7 +6,11 @@ import { TimeColumn } from "@/components/Calendar/TimeColumn";
 import { fetchTasks } from "@/services/taskService";
 import React, { Suspense } from "react";
 
-const WeekPage = async ({ params }: { params: { weekStart: string } }) => {
+const WeekPage = async ({
+  params,
+}: {
+  params: Promise<{ weekStart: string }>;
+}) => {
   const { weekStart } = await params;
   // But using await in a Server Component will block its rendering until the await statement is finished. Passing a Promise from a Server Component to a Client Component prevents the Promise from blocking the rendering of the Server Component.
   const data = fetchTasks({ weekStart });
