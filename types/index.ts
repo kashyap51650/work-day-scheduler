@@ -1,0 +1,1 @@
+type CalendarViewMode = "week" | "day";
