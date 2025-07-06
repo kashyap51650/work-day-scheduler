@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  experimental: {
+    reactCompiler: true,
+  },
 };
 
 /* Comment Out this code to see the visual data of bundle size */
