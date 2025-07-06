@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { getWeekDates } from "@/utils/date";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -13,12 +13,15 @@ import { useModal } from "@/hooks/useModal";
 
 export const CalendarToolbar = () => {
   const router = useRouter();
+  const pathname = usePathname();
+
+  const calendarViewMode = pathname.split("/")[1] as CalendarViewMode;
 
   const { openModal, closeModal, isOpen } = useModal();
 
   // State for current date, task form, and view mode
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState<"week" | "day">("week");
+  const [viewMode, setViewMode] = useState<CalendarViewMode>(calendarViewMode);
 
   // Get week range for display
   const weekDates = getWeekDates(currentDate);
