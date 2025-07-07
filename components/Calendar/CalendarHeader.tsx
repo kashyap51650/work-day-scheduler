@@ -22,11 +22,11 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
             <div
               key={d}
               className={clsx(
-                "h-12 flex justify-center font-semibold text-gray-700 border-b border-gray-300 flex-col ps-2 items-center"
+                "h-15 flex flex-col items-start font-semibold text-gray-700 border-b border-gray-300 p-2"
               )}
             >
-              <span className="text-xl leading-6">{day}</span>
-              <span className="text-xs">{weekday}</span>
+              <span className="text-2xl leading-6">{day}</span>
+              <span className="text-base">{weekday}</span>
             </div>
           );
         })}
@@ -41,11 +41,11 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
       <div
         key={date}
         className={clsx(
-          "h-12 flex justify-center font-semibold text-gray-700 border-b border-gray-300 flex-col ps-2"
+          "h-15 flex justify-center font-semibold text-gray-700 border-b border-gray-300 flex-col p-2"
         )}
       >
-        <span className="text-xl leading-6">{day}</span>
-        <span className="text-xs">{weekday}</span>
+        <span className="text-2xl leading-6">{day}</span>
+        <span className="text-base">{weekday}</span>
       </div>
     );
   }
