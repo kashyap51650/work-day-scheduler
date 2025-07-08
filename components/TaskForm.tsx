@@ -12,6 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { ErrorAlert } from "./ErrorAlert";
 
 const initialState = { message: "", success: false };
 
@@ -42,7 +43,6 @@ export default function TaskForm() {
   const onDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value;
     const holidays = await fetchHolidays({ date });
-    console.log("Holidays fetched:", holidays);
     if (holidays.length > 0) {
       setHolidayWarning(
         `The selected date ${date} is a holiday ${holidays[0].title}. Please choose a different date`
@@ -59,12 +59,7 @@ export default function TaskForm() {
       </div>
 
       {/* Holiday Warning */}
-      {!!holidayWarning && (
-        <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-800 rounded-lg px-3 py-2 text-sm font-medium animate-fade-in">
-          <ExclamationTriangleIcon className="w-5 h-5 text-red-500" />
-          <span>{holidayWarning}</span>
-        </div>
-      )}
+      {isHoliday && <ErrorAlert error={holidayWarning} />}
 
       {/* Title Input */}
       <div>
@@ -97,7 +92,6 @@ export default function TaskForm() {
             required
             className="flex-1 bg-transparent text-sm focus:outline-none"
             onChange={onDateChange}
-            // onSelect={(e) => console.log(e)}
           />
         </div>
       </div>

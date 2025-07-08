@@ -8,6 +8,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { Task } from "@prisma/client";
 import { updateTask } from "@/actions/task";
+import { fetchHolidays } from "@/services/holidayService";
+import { ErrorAlert } from "./ErrorAlert";
 
 interface EditTaskModalProps {
   isOpen: boolean;
@@ -20,6 +22,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
   onClose,
   initialData,
 }) => {
+  const [holidayWarning, setHolidayWarning] = useState("");
   const [formData, setFormData] = useState<Partial<Task>>({
     title: "",
     date: "",
@@ -35,6 +38,10 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    if (e.target.name === "date") {
+      onDateChange(e);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,6 +51,20 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
     updateTask(formDataObj);
     onClose();
   };
+
+  const onDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = e.target.value;
+    const holidays = await fetchHolidays({ date });
+    if (holidays.length > 0) {
+      setHolidayWarning(
+        `The selected date ${date} is a holiday ${holidays[0].title}. Please choose a different date`
+      );
+    } else {
+      holidayWarning && setHolidayWarning("");
+    }
+  };
+
+  const isHoliday = !!holidayWarning;
 
   if (!isOpen || typeof window === "undefined") return null;
 
@@ -62,6 +83,9 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
             <PencilIcon className="w-5 h-5" />
             {initialData?.id ? "Edit Task" : "Add Task"}
           </div>
+
+          {/* Holiday Warning */}
+          {isHoliday && <ErrorAlert error={holidayWarning} />}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -136,7 +160,8 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition cursor-pointer"
+            className="w-full primary-btn"
+            disabled={isHoliday}
           >
             {initialData?.id ? "Update Task" : "Add Task"}
           </button>
