@@ -1,12 +1,12 @@
 import { Task } from "@prisma/client";
 
-interface FetchTasksParams {
+interface FetchHolidayParams {
   date?: string; // 'YYYY-MM-DD'
-  weekStart?: string; // 'YYYY-MM-DD' (start of the week)
+  week?: string; // 'YYYY-MM-DD' (start of the week)
 }
 
-export async function fetchTasks(
-  params: FetchTasksParams = {}
+export async function fetchHolidays(
+  params: FetchHolidayParams = {}
 ): Promise<Task[]> {
   const query = new URLSearchParams(
     Object.fromEntries(
@@ -16,12 +16,13 @@ export async function fetchTasks(
       ][]
     )
   ).toString();
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/tasks${
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/holidays${
     query ? `?${query}` : ""
   }`;
-
+  console.log("Fetching holidays from URL:", url);
   const res = await fetch(url, {
-    next: { tags: ["tasks"] }, // ✅ ISR/Cache tagging
+    next: { tags: ["holidays"] }, // ✅ ISR/Cache tagging
   });
 
   if (!res.ok) {

@@ -21,3 +21,10 @@ model Task {
   endTime   String
   createdAt DateTime @default(now())
 }
+
+model Holiday {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  date      String
+  title     String
+  createdAt DateTime @default(now())
+}

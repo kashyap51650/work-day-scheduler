@@ -1,15 +1,18 @@
 "use client";
 
 import { createTask } from "@/actions/task";
+import { fetchHolidays } from "@/services/holidayService";
 import {
   CalendarIcon,
   CheckCircleIcon,
   ClockIcon,
+  ExclamationTriangleIcon,
   PencilIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { ErrorAlert } from "./ErrorAlert";
 
 const initialState = { message: "", success: false };
 
@@ -17,6 +20,8 @@ export default function TaskForm() {
   const [state, formAction] = useActionState(createTask, initialState);
 
   const [showStatus, setShowStatus] = useState(false);
+  const [holidayWarning, setHolidayWarning] = useState("");
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -33,11 +38,28 @@ export default function TaskForm() {
     };
   }, []);
 
+  const isHoliday = !!holidayWarning;
+
+  const onDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = e.target.value;
+    const holidays = await fetchHolidays({ date });
+    if (holidays.length > 0) {
+      setHolidayWarning(
+        `The selected date ${date} is a holiday ${holidays[0].title}. Please choose a different date`
+      );
+    } else {
+      holidayWarning && setHolidayWarning("");
+    }
+  };
+
   return (
     <form action={formAction} className="p-6 space-y-5">
       <div className="text-indigo-600 text-xl font-semibold flex items-center gap-2">
         Add Task
       </div>
+
+      {/* Holiday Warning */}
+      {isHoliday && <ErrorAlert error={holidayWarning} />}
 
       {/* Title Input */}
       <div>
@@ -52,6 +74,7 @@ export default function TaskForm() {
             required
             placeholder="e.g., Project Meeting"
             className="flex-1 bg-transparent text-sm focus:outline-none"
+            disabled={isHoliday}
           />
         </div>
       </div>
@@ -68,6 +91,7 @@ export default function TaskForm() {
             type="date"
             required
             className="flex-1 bg-transparent text-sm focus:outline-none"
+            onChange={onDateChange}
           />
         </div>
       </div>
@@ -85,6 +109,7 @@ export default function TaskForm() {
               type="time"
               required
               className="flex-1 bg-transparent text-sm focus:outline-none"
+              disabled={isHoliday}
             />
           </div>
         </div>
@@ -100,13 +125,14 @@ export default function TaskForm() {
               type="time"
               required
               className="flex-1 bg-transparent text-sm focus:outline-none"
+              disabled={isHoliday}
             />
           </div>
         </div>
       </div>
 
       {/* Submit Button */}
-      <button type="submit" className="w-full primary-btn">
+      <button type="submit" className="w-full primary-btn" disabled={isHoliday}>
         Add Task
       </button>
 
