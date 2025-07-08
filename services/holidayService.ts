@@ -17,8 +17,10 @@ export async function fetchHolidays(
     )
   ).toString();
 
-  const url = `${process.env.BASE_URL}/holidays${query ? `?${query}` : ""}`;
-
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/holidays${
+    query ? `?${query}` : ""
+  }`;
+  console.log("Fetching holidays from URL:", url);
   const res = await fetch(url, {
     next: { tags: ["holidays"] }, // ✅ ISR/Cache tagging
   });

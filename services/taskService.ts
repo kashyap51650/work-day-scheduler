@@ -16,7 +16,9 @@ export async function fetchTasks(
       ][]
     )
   ).toString();
-  const url = `${process.env.BASE_URL}/tasks${query ? `?${query}` : ""}`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/tasks${
+    query ? `?${query}` : ""
+  }`;
 
   const res = await fetch(url, {
     next: { tags: ["tasks"] }, // ✅ ISR/Cache tagging
